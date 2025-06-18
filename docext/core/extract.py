@@ -115,8 +115,20 @@ def extract_tables_from_documents(
     response = sync_request(messages, model_name)["choices"][0]["message"]["content"]
     logger.info(f"Response: {response}")
 
-    response = response[response.index("|") : response.rindex("|") + 1]
-    df = mdpd.from_md(response)
+    # Check if response contains a markdown table (with pipe characters)
+    if "|" in response:
+        try:
+            # Extract the table portion from the response
+            response = response[response.index("|") : response.rindex("|") + 1]
+            df = mdpd.from_md(response)
+        except Exception as e:
+            logger.warning(f"Failed to parse markdown table: {e}")
+            # Return empty DataFrame if table parsing fails
+            df = pd.DataFrame()
+    else:
+        logger.warning("Response does not contain a markdown table format")
+        # Return empty DataFrame if no table format is found
+        df = pd.DataFrame()
 
     return df
 
