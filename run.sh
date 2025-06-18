@@ -1,9 +1,9 @@
 #!/bin/bash
 
 run_start() {
-  docker run --rm \
+  docker run --rm -d \
     --gpus "device=1" \
-    -p 6000:8000 \
+    -p 8003:8000 \
     -p 7860:7860 \
     nanonets-docext
 }
@@ -20,12 +20,17 @@ run_stop() {
   docker stop $(docker ps -q --filter ancestor=nanonets-docext)
 }
 
+run_logs() {
+  docker logs -f $(docker ps -q --filter ancestor=nanonets-docext)
+}
+
 show_help() {
   echo "Usage: run.sh [command] [options]"
   echo "Commands:"
   echo "  start              - Start the Docker container"
   echo "  build [--no-cache] - Build the Docker image (optionally without cache)"
   echo "  stop               - Stop the Docker container"
+  echo "  logs               - Show logs from the Docker container"
   echo "  help               - Show this help message"
 }
 
@@ -38,6 +43,9 @@ case "$1" in
     ;;
   stop)
     run_stop
+    ;;
+  logs)
+    run_logs
     ;;
   help|*)
     show_help

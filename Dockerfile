@@ -55,4 +55,4 @@ EXPOSE 8000
 
 # Set default command to run docext with recommended model
 ENTRYPOINT ["/app/.venv/bin/python", "-m", "docext.app.app"]
-CMD ["--model_name", "hosted_vllm/nanonets/Nanonets-OCR-s", "--no-share", "--vlm_server_port", "8000"]
+CMD ["--model_name", "hosted_vllm/nanonets/Nanonets-OCR-s", "--no-share", "--vlm_server_host", "0.0.0.0", "--vlm_server_port", "8000"]
